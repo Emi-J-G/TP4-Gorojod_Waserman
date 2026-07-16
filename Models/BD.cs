@@ -49,8 +49,8 @@ public class BD
                 query = "SELECT Figuritas.numero FROM Album INNER JOIN Figuritas ON Album.idFigurita = Figuritas.id WHERE Figuritas.id = '@id';";
                 resultado = connection.QueryFirstOrDefault<int>(query, new {id = figuritas[i].id});
                 if (resultado == null){
-                    query = "INSERT Album(id, archivo, nombre, numero, pais, color) VALUES (@id, @archivo, @nombre, @numero, @pais, @color);";
-                    connection.Execute(query, new {id = figuritas[i].id, archivo = figuritas[i].archivo, nombre = figuritas[i].nombre, numero = figuritas[i].numero, pais = figuritas[i].pais, color = figuritas[i].color});
+                    query = "INSERT Album(id, archivo, nombre, numero, pais, color, cantidad) VALUES (@id, @archivo, @nombre, @numero, @pais, @color, @cantidad);";
+                    connection.Execute(query, new {id = figuritas[i].id, archivo = figuritas[i].archivo, nombre = figuritas[i].nombre, numero = figuritas[i].numero, pais = figuritas[i].pais, color = figuritas[i].color, cantidad = figuritas[i].cantidad});
                     album.getPegadas().Add(figuritas[i]);
                 }
                 else {
@@ -60,4 +60,30 @@ public class BD
             }
         }
     }    
+    public void sumarFiguritas(int id){
+        using(SqlConnection connection = new SqlConnection(connectionString))
+        {
+            string query;
+            if (TengoJugadorEnAlbum(id)!=0)
+            {
+                query = "UPDATE Album SET cantidad += 1 WHERE idFigurita = @id;";   
+            }
+            else
+            {
+                query = "INSERT INTO Album (idFigurita, cantidad) VALUES (@id, 1)";    
+            }
+            connection.Execute(query, new {id}); 
+            
+        }
+    }
+    public int TengoJugadorEnAlbum(int id){
+        int idF=0;
+        using(SqlConnection connection = new SqlConnection(connectionString))
+        {
+            string query = "SELECT idFigurita FROM Album WHERE idFigurita = @id ";
+            idF = connection.QueryFirstOrDefault<int>(query, new {id});
+        }
+        return idF;
+    }
+
 }

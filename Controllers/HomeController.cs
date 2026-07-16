@@ -34,7 +34,9 @@ public class HomeController : Controller
     public IActionResult confirmarSobre(List<Figuritas> figuritas, bool seGuarda){
         BD bd = new BD();
         if (seGuarda){
-            bd.sumarFiguritas(figuritas);
+            foreach(Figuritas figurita in figuritas){
+                bd.sumarFiguritas(figurita.id);
+            }
         }
         return RedirectToAction("Index");
     } //Si eligen quedarse con las figuritas despues de abrir el sobre, se ejecutara esto y se añadiran en la base

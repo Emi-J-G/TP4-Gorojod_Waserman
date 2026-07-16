@@ -10,9 +10,7 @@
         </br>
         @for (int i = 0; i < ViewBag.cFig; i++) {
             <img src = "/images/jugadores/@ViewBag.figus[i].archivo" alt= "figurita del jugador">
-            if (ViewBag.peg.Contains(ViewBag.figus[i])) {
-                <p>Cantidad: @ViewBag.cant+=1</p>
-            }
+            <p>Cantidad: @ViewBag.figus[i].cantidad</p>
         }
     </form>
     
