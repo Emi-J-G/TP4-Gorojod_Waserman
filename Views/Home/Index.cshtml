@@ -1,0 +1,19 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <form action = '@Url.Action("abrirSobre", "Home")' method="post" enctype="multipart/form-data">
+        <input type="submit" value="Abrir Sobre">
+        </br>
+        @for (int i = 0; i < ViewBag.cFig; i++) {
+            <img src = "/images/jugadores/@ViewBag.figus[i].archivo" alt= "figurita del jugador">
+            if (ViewBag.peg.Contains(ViewBag.figus[i])) {
+                <p>Cantidad: @ViewBag.cant+=1</p>
+            }
+        }
+    </form>
+    
+</div>

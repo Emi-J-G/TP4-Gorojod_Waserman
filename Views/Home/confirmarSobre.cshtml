@@ -1,0 +1,10 @@
+<h1>Sobre Abierto</h1>
+@foreach (Figuritas figurita in ViewBag.infoFig) {
+    <img src = "/images/jugadores/@figurita.archivo" alt= "figurita del jugador">
+}
+<p>confirmar sobre</p>
+<form action = '@Url.Action("confirmarSobre", "Home")' method="post" enctype="multipart/form-data">
+    <input type="checkbox" name="seGuarda">Guardar</br>
+    </br>
+    <input type="submit" value="Confirmar">
+</form>
