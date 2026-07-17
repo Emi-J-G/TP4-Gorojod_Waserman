@@ -20,7 +20,7 @@ public class BD
         List<Figuritas> figuritas = new List<Figuritas>();
         string query;
         using (SqlConnection connection = new SqlConnection(connectionString)) {
-            query = "SELECT * FROM Figuritas LEFT JOIN Album ON Figuritas.id = Album.idFigurita;";
+            query = "SELECT Figuritas.*, Album.cantidad FROM Figuritas LEFT JOIN Album ON Figuritas.id = Album.idFigurita;";
             figuritas = connection.Query<Figuritas>(query).ToList();
         }
         return figuritas;
@@ -40,50 +40,25 @@ public class BD
         }
         return figuritas;
     }
-    public void añadirFiguritas (List<Figuritas> figuritas){
+    public void añadirFiguritas (string figuritas){
         using (SqlConnection connection = new SqlConnection(connectionString)){
-            Album album = new Album();
             string query;
             int resultado;
-            for (int i = 0; i <= figuritas.Count; i++){
-                query = "SELECT Figuritas.numero FROM Album INNER JOIN Figuritas ON Album.idFigurita = Figuritas.id WHERE Figuritas.id = '@id';";
-                resultado = connection.QueryFirstOrDefault<int>(query, new {id = figuritas[i].id});
-                if (resultado == null){
-                    query = "INSERT Album(id, archivo, nombre, numero, pais, color, cantidad) VALUES (@id, @archivo, @nombre, @numero, @pais, @color, @cantidad);";
-                    connection.Execute(query, new {id = figuritas[i].id, archivo = figuritas[i].archivo, nombre = figuritas[i].nombre, numero = figuritas[i].numero, pais = figuritas[i].pais, color = figuritas[i].color, cantidad = figuritas[i].cantidad});
-                    album.getPegadas().Add(figuritas[i]);
+            string[] idsFigus = figuritas.Split(",");
+            for (int i = 0; i < 5; i++){
+                query = "SELECT idFigurita FROM Album WHERE idFigurita = @id;";
+                resultado = connection.QueryFirstOrDefault<int>(query, new {id = int.Parse(idsFigus[i])});
+                if (resultado == 0){
+                    query = "INSERT INTO Album(idFigurita, cantidad) VALUES (@id, 1);";
+                    connection.Execute(query, new {id = int.Parse(idsFigus[i])});
                 }
                 else {
                     query = "UPDATE Album SET cantidad+=1 WHERE idFigurita=@id";
-                    connection.Execute(query, new {id = figuritas[i].id});
+                    connection.Execute(query, new {id = int.Parse(idsFigus[i])});
                 }
             }
         }
     }    
-    public void sumarFiguritas(int id){
-        using(SqlConnection connection = new SqlConnection(connectionString))
-        {
-            string query;
-            if (TengoJugadorEnAlbum(id)!=0)
-            {
-                query = "UPDATE Album SET cantidad += 1 WHERE idFigurita = @id;";   
-            }
-            else
-            {
-                query = "INSERT INTO Album (idFigurita, cantidad) VALUES (@id, 1)";    
-            }
-            connection.Execute(query, new {id}); 
-            
-        }
-    }
-    public int TengoJugadorEnAlbum(int id){
-        int idF=0;
-        using(SqlConnection connection = new SqlConnection(connectionString))
-        {
-            string query = "SELECT idFigurita FROM Album WHERE idFigurita = @id ";
-            idF = connection.QueryFirstOrDefault<int>(query, new {id});
-        }
-        return idF;
-    }
+}
 
 }
