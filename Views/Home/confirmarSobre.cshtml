@@ -1,10 +1,16 @@
 <h1>Sobre Abierto</h1>
-@foreach (Figuritas figurita in ViewBag.infoFig) {
-    <img src = "/images/jugadores/@figurita.archivo" alt= "figurita del jugador">
+@{
+    string ids="";
+            
+    foreach (Figuritas figurita in ViewBag.infoFig) {
+        <img src = "/images/jugadores/@figurita.archivo" alt= "figurita del jugador">
+        ids+=figurita.id+",";
+    }
 }
 <p>confirmar sobre</p>
 <form action = '@Url.Action("confirmarSobre", "Home")' method="post" enctype="multipart/form-data">
-    <input type="checkbox" name="seGuarda">Guardar</br>
+    <input type="checkbox" name="seGuarda" value = "true">Guardar</br>
+    <input type="hidden" name="figuritas" value="@ids">
     </br>
     <input type="submit" value="Confirmar">
 </form>
