@@ -19,7 +19,6 @@ public class HomeController : Controller
         Album album = new Album();
         ViewBag.cFig = bd.getCantTotal();
         ViewBag.figus = bd.getFiguritas();
-        ViewBag.peg = album.getPegadas();
         return View();
     }
 
@@ -31,15 +30,14 @@ public class HomeController : Controller
     } //Aca va a devolver 5 figuritas que se deberan mostrar en la view
 
     [HttpPost]
-    public IActionResult confirmarSobre(List<Figuritas> figuritas, bool seGuarda){
+    public IActionResult confirmarSobre(string figuritas, bool seGuarda){
         BD bd = new BD();
         if (seGuarda){
-            foreach(Figuritas figurita in figuritas){
-                bd.sumarFiguritas(figurita.id);
-            }
+            bd.añadirFiguritas(figuritas);
         }
         return RedirectToAction("Index");
-    } //Si eligen quedarse con las figuritas despues de abrir el sobre, se ejecutara esto y se añadiran en la base
+    }
+        
 
     public IActionResult Privacy()
     {
